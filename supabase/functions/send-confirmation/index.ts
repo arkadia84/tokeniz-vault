@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Tokeniz <onboarding@resend.dev>",
+        from: "Tokeniz <hello@tokeniz.ai>",
         to: [email],
         cc: ["admin@propex.app"],
         subject: "Welcome to Tokeniz — You're on the Early Access List!",
