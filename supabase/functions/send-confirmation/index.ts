@@ -123,6 +123,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "Tokeniz <onboarding@resend.dev>",
         to: [email],
+        cc: ["admin@propex.app"],
         subject: "Welcome to Tokeniz — You're on the Early Access List!",
         html: emailHtml,
       }),
