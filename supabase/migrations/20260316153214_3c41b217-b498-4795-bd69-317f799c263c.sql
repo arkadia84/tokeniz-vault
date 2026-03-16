@@ -1,0 +1,1 @@
+DROP POLICY "Allow anonymous insert" ON public.early_access_signups;
