@@ -14,12 +14,12 @@ export function HeroSection() {
       <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
         <div className="w-[500px] h-[500px] animate-grid" style={{ transformStyle: "preserve-3d" }}>
           <svg viewBox="0 0 500 500" className="w-full h-full">
-            {Array.from({ length: 11 }).map((_, i) => (
-              <g key={i}>
+            {Array.from({ length: 11 }).map((_, i) =>
+            <g key={i}>
                 <line x1={i * 50} y1={0} x2={i * 50} y2={500} stroke="hsl(217 91% 60% / 0.3)" strokeWidth="0.5" />
                 <line x1={0} y1={i * 50} x2={500} y2={i * 50} stroke="hsl(217 91% 60% / 0.3)" strokeWidth="0.5" />
               </g>
-            ))}
+            )}
           </svg>
         </div>
       </div>
@@ -52,25 +52,25 @@ export function HeroSection() {
             </a>
           </Button>
           <Button size="lg" variant="outline" className="border-border/60 text-foreground hover:bg-secondary px-8" asChild>
-            <a href="#contact">Book a Demo</a>
+            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA">Book a Demo</a>
           </Button>
         </div>
 
         {/* Floating cards */}
         <div className="fade-up fade-up-delay-4 mt-16 lg:mt-24 grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto">
-          {["Real Estate", "Fund", "IP Assets"].map((label) => (
-            <div
-              key={label}
-              className="glass rounded-lg p-3 sm:p-4 text-center hover:border-primary/30 transition-colors duration-300"
-            >
+          {["Real Estate", "Fund", "IP Assets"].map((label) =>
+          <div
+            key={label}
+            className="glass rounded-lg p-3 sm:p-4 text-center hover:border-primary/30 transition-colors duration-300">
+            
               <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <div className="w-3 h-3 rounded-sm bg-primary/60" />
               </div>
               <p className="text-xs font-medium text-muted-foreground">{label}</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
