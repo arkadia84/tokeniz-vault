@@ -44,7 +44,7 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" asChild>
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-white/10" asChild>
             <a href="#contact">Book a Demo</a>
           </Button>
           <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>

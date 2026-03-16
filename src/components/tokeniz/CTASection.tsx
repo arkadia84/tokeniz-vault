@@ -47,7 +47,7 @@ export function CTASection() {
         </form>
 
         <div className="fade-up fade-up-delay-3">
-          <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-white/10">
             Book a Demo
           </Button>
         </div>
