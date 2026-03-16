@@ -1,20 +1,41 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export function CTASection() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    toast({
-      title: "You're on the list",
-      description: "We'll be in touch soon with early access details.",
-    });
-    setEmail("");
+    if (!email || loading) return;
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-confirmation", {
+        body: { email },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "You're on the list! 🎉",
+        description: "Check your inbox for a confirmation email with more details.",
+      });
+      setEmail("");
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,17 +60,21 @@ export function CTASection() {
             onChange={(e) => setEmail(e.target.value)}
             className="bg-secondary/50 border-border/60 h-11 text-sm"
             required
+            disabled={loading}
           />
-          <Button type="submit" size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shrink-0">
+          <Button type="submit" size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shrink-0" disabled={loading}>
+            {loading ? <Loader2 size={16} className="animate-spin" /> : null}
             Register Early Access
-            <ArrowRight size={16} />
+            {!loading && <ArrowRight size={16} />}
           </Button>
         </form>
 
         <div className="fade-up fade-up-delay-3">
-          <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-white/10">
-            Book a Demo
-          </Button>
+          <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" target="_blank" rel="noopener noreferrer">
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-white/10">
+              Book a Demo
+            </Button>
+          </a>
         </div>
       </div>
     </section>
