@@ -52,7 +52,7 @@ export function HeroSection() {
             </a>
           </Button>
           <Button size="lg" variant="outline" className="border-border/60 text-foreground hover:bg-secondary px-8" asChild>
-            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" className="bg-primary-foreground text-secondary-foreground">Book a Demo</a>
+            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" className="text-secondary-foreground bg-orange-500">Book a Demo</a>
           </Button>
         </div>
 
