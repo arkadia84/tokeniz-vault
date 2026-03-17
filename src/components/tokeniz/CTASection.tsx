@@ -23,7 +23,7 @@ export function CTASection() {
               <ArrowRight size={16} />
             </a>
           </Button>
-          <Button size="lg" variant="outline" className="border-border/60 text-foreground hover:bg-secondary px-8" asChild>
+          <Button size="lg" variant="outline" className="border-border/60 text-foreground hover:bg-secondary hover:text-foreground px-8" asChild>
             <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" target="_blank" rel="noopener noreferrer">
               Book a Demo
             </a>
