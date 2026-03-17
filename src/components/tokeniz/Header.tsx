@@ -73,7 +73,7 @@ export function Header() {
         )}
           <div className="flex flex-col gap-2 pt-2">
             <Button size="sm" className="w-full" asChild>
-              <a href="#contact">Register Early Access</a>
+              <a href="https://app.tokeniz.ai">Try Demo App</a>
             </Button>
           </div>
         </div>
