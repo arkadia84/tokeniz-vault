@@ -47,7 +47,7 @@ export function HeroSection() {
         <div className="fade-up fade-up-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 gap-2" asChild>
             <a href="https://app.tokeniz.ai">
-              Register Early Access
+              Try Demo App
               <ArrowRight size={16} />
             </a>
           </Button>
