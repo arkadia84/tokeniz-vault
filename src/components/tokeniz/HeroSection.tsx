@@ -46,13 +46,13 @@ export function HeroSection() {
 
         <div className="fade-up fade-up-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 gap-2" asChild>
-            <a href="https://app.tokeniz.ai">
-              Try Demo App
+            <a href="#contact">
+              Register Early Access
               <ArrowRight size={16} />
             </a>
           </Button>
           <Button size="lg" variant="outline" className="border-border/60 text-foreground hover:bg-secondary px-8" asChild>
-            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA">Book a Demo</a>
+            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" className="text-primary bg-primary-foreground">Book a Demo</a>
           </Button>
         </div>
 
