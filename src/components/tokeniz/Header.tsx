@@ -48,7 +48,7 @@ export function Header() {
             <a href="https://calendar.app.google/oj4GCa72dQYVC22RA">Book a Demo</a>
           </Button>
           <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-            <a href="#contact">Register Early Access</a>
+            <a href="https://app.tokeniz.ai">Try Demo App</a>
           </Button>
         </div>
 
@@ -73,7 +73,7 @@ export function Header() {
         )}
           <div className="flex flex-col gap-2 pt-2">
             <Button size="sm" className="w-full" asChild>
-              <a href="#contact">Register Early Access</a>
+              <a href="https://app.tokeniz.ai">Try Demo App</a>
             </Button>
           </div>
         </div>
