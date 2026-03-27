@@ -45,7 +45,7 @@ export function Header() {
 
         <div className="hidden md:flex items-center">
           <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-[10px] font-bold" asChild>
-            <a href="#start">Get Started</a>
+            <a href="https://app.tokeniz.ai">Get Started</a>
           </Button>
         </div>
 
@@ -70,7 +70,7 @@ export function Header() {
           ))}
           <div className="flex flex-col gap-2 pt-2">
             <Button size="sm" className="w-full" asChild>
-              <a href="#start" onClick={() => setMobileOpen(false)}>Get Started →</a>
+              <a href="https://app.tokeniz.ai" onClick={() => setMobileOpen(false)}>Get Started →</a>
             </Button>
           </div>
         </div>
