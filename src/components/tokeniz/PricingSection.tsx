@@ -101,7 +101,7 @@ export function PricingSection() {
                 }`}
                 asChild
               >
-                <a href="#start">Get started →</a>
+                <a href="https://app.tokeniz.ai">Get started →</a>
               </Button>
             </div>
           ))}

@@ -78,10 +78,10 @@ export function HeroSection() {
         {/* CTA buttons */}
         <div className="fade-up fade-up-delay-4 flex flex-col items-center gap-3.5">
           <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 gap-2.5 rounded-xl font-bold w-[280px] h-[52px] text-base" asChild>
-            <a href="#start">{data.cta}</a>
+            <a href="https://app.tokeniz.ai">{data.cta}</a>
           </Button>
           <Button size="lg" className="bg-orange text-foreground hover:bg-orange/90 px-8 gap-2.5 rounded-xl font-bold w-[280px] h-[52px] text-base" asChild>
-            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" target="_blank" rel="noopener noreferrer">
+            <a href="https://app.tokeniz.ai" target="_blank" rel="noopener noreferrer">
               Book a Demo
             </a>
           </Button>
