@@ -1,76 +1,104 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+
+const heroData = {
+  new: {
+    h1: <>Your Company. <span className="text-primary">Built for<br />the World.</span></>,
+    sub: "Tokeniz lets non-US founders launch a US Series LLC and open a global business account — without a US address, a lawyer, or a bank appointment.",
+    sub2: "Build, manage and distribute ownership of companies and assets using compliant legal structures combined with digital infrastructure.",
+    cta: "Launch My Company →",
+  },
+  existing: {
+    h1: <>Better Infrastructure. <span className="text-primary">No Reforms.</span></>,
+    sub: "Already have a company? Upgrade your financial setup. Get a global business account, 0% FX on USD, and transfers to 100+ countries — without touching your existing entity.",
+    sub2: "Connect your existing LLC to the full Tokeniz infrastructure stack. Account-only setup from $197.",
+    cta: "Upgrade My Account →",
+  },
+};
+
+const heroCards = [
+  { icon: "🏢", text: "Series LLC Formation" },
+  { icon: "💳", text: "Global Business Account" },
+  { icon: "🌍", text: "100+ Countries" },
+  { icon: "⚡", text: "10 Minute Setup" },
+];
 
 export function HeroSection() {
+  const [audience, setAudience] = useState<"new" | "existing">("new");
+  const data = heroData[audience];
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16 text-center px-5 pb-20">
       {/* Background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[120px] animate-pulse-glow" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full bg-primary/10 blur-[120px] animate-pulse-glow" />
+        <div className="absolute bottom-0 right-[-10%] w-[400px] h-[400px] rounded-full bg-orange/5 blur-[120px]" />
       </div>
 
-      {/* Grid visual */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-        <div className="w-[500px] h-[500px] animate-grid" style={{ transformStyle: "preserve-3d" }}>
-          <svg viewBox="0 0 500 500" className="w-full h-full">
-            {Array.from({ length: 11 }).map((_, i) =>
-            <g key={i}>
-                <line x1={i * 50} y1={0} x2={i * 50} y2={500} stroke="hsl(217 91% 60% / 0.3)" strokeWidth="0.5" />
-                <line x1={0} y1={i * 50} x2={500} y2={i * 50} stroke="hsl(217 91% 60% / 0.3)" strokeWidth="0.5" />
-              </g>
-            )}
-          </svg>
-        </div>
-      </div>
-
-      <div className="relative container mx-auto px-4 lg:px-8 text-center max-w-4xl">
-        <div className="fade-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-medium text-muted-foreground mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            Infrastructure for Tokenized Ownership
-          </div>
+      <div className="relative max-w-4xl mx-auto">
+        {/* Badge */}
+        <div className="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/25 bg-primary/5 text-xs font-semibold text-primary mb-9">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          Infrastructure for Tokenized Ownership
         </div>
 
-        <h1 className="fade-up fade-up-delay-1 text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.08] text-gradient mb-6">
-          Turn Companies Into Digital Infrastructure
+        {/* Audience toggle */}
+        <div className="fade-up fade-up-delay-1 flex gap-0 bg-card border border-border rounded-xl p-1 w-fit mx-auto mb-9">
+          <button
+            className={`px-7 py-2.5 rounded-[9px] text-sm font-semibold transition-all ${
+              audience === "new" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+            onClick={() => setAudience("new")}
+          >
+            Starting fresh
+          </button>
+          <button
+            className={`px-7 py-2.5 rounded-[9px] text-sm font-semibold transition-all ${
+              audience === "existing" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+            onClick={() => setAudience("existing")}
+          >
+            Already incorporated
+          </button>
+        </div>
+
+        {/* Headline */}
+        <h1 className="fade-up fade-up-delay-1 text-4xl sm:text-5xl lg:text-[4.2rem] font-black tracking-tight leading-[1.08] mb-6" style={{ letterSpacing: "-0.03em" }}>
+          {data.h1}
         </h1>
 
-        <p className="fade-up fade-up-delay-2 text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed">
-          Tokeniz allows entrepreneurs, asset owners, and operators to create on-chain companies that can own, manage, and distribute real-world assets using programmable ownership.
+        <p className="fade-up fade-up-delay-2 text-base sm:text-lg lg:text-[1.15rem] text-muted-foreground max-w-[560px] mx-auto mb-4 leading-[1.7]">
+          {data.sub}
         </p>
 
-        <p className="fade-up fade-up-delay-3 text-sm text-muted-foreground/70 max-w-xl mx-auto mb-10">
-          Build, manage and distribute ownership of companies and assets using compliant legal structures combined with blockchain infrastructure.
+        <p className="fade-up fade-up-delay-3 text-sm text-muted-foreground/60 max-w-[500px] mx-auto mb-12 leading-[1.7]">
+          {data.sub2}
         </p>
 
-        <div className="fade-up fade-up-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 gap-2" asChild>
-            <a href="https://app.tokeniz.ai">
-              Try Demo App
-              <ArrowRight size={16} />
+        {/* CTA buttons */}
+        <div className="fade-up fade-up-delay-4 flex flex-col items-center gap-3.5">
+          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 gap-2.5 rounded-xl font-bold w-[280px] h-[52px] text-base" asChild>
+            <a href="#start">{data.cta}</a>
+          </Button>
+          <Button size="lg" className="bg-orange text-foreground hover:bg-orange/90 px-8 gap-2.5 rounded-xl font-bold w-[280px] h-[52px] text-base" asChild>
+            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" target="_blank" rel="noopener noreferrer">
+              Book a Demo
             </a>
           </Button>
-          <Button size="lg" variant="outline" className="border-border/60 text-foreground hover:bg-secondary px-8" asChild>
-            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" className="text-secondary-foreground bg-orange-500">Book a Demo</a>
-          </Button>
         </div>
 
-        {/* Floating cards */}
-        <div className="fade-up fade-up-delay-4 mt-16 lg:mt-24 grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto">
-          {["Real Estate", "Fund", "IP Assets"].map((label) =>
-          <div
-            key={label}
-            className="glass rounded-lg p-3 sm:p-4 text-center hover:border-primary/30 transition-colors duration-300">
-            
-              <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center mx-auto mb-2">
-                <div className="w-3 h-3 rounded-sm bg-primary/60" />
+        {/* Feature cards */}
+        <div className="fade-up fade-up-delay-4 flex flex-wrap justify-center gap-4 mt-[72px]">
+          {heroCards.map((card) => (
+            <div key={card.text} className="bg-card border border-border rounded-2xl px-6 py-5 flex items-center gap-3 min-w-[160px]">
+              <div className="w-9 h-9 rounded-[10px] bg-primary/15 flex items-center justify-center text-base shrink-0">
+                {card.icon}
               </div>
-              <p className="text-xs font-medium text-muted-foreground">{label}</p>
+              <span className="text-[0.82rem] font-semibold text-foreground">{card.text}</span>
             </div>
-          )}
+          ))}
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
