@@ -71,7 +71,7 @@ export function HeroSection() {
           {data.sub}
         </p>
 
-        <p className="fade-up fade-up-delay-3 text-sm text-muted-foreground/60 max-w-[500px] mx-auto mb-12 leading-[1.7]">
+        <p className="fade-up fade-up-delay-3 text-sm max-w-[500px] mx-auto mb-12 leading-[1.7] text-muted-foreground">
           {data.sub2}
         </p>
 
@@ -81,8 +81,8 @@ export function HeroSection() {
             <a href="https://app.tokeniz.ai">{data.cta}</a>
           </Button>
           <Button size="lg" className="bg-orange text-foreground hover:bg-orange/90 px-8 gap-2.5 rounded-xl font-bold w-[280px] h-[52px] text-base" asChild>
-            <a href="https://app.tokeniz.ai" target="_blank" rel="noopener noreferrer">
-              Book a Demo
+            <a href="https://calendar.app.google/oj4GCa72dQYVC22RA" target="_blank" rel="noopener noreferrer">
+              Book a Call
             </a>
           </Button>
         </div>
