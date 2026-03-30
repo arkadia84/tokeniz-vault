@@ -1,37 +1,35 @@
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useState } from "react";
 import { Header } from "@/components/tokeniz/Header";
 import { HeroSection } from "@/components/tokeniz/HeroSection";
-import { StatsSection } from "@/components/tokeniz/StatsSection";
+import { TrustStrip } from "@/components/tokeniz/TrustStrip";
 import { ProblemSection } from "@/components/tokeniz/ProblemSection";
-import { AudienceSection } from "@/components/tokeniz/AudienceSection";
 import { HowItWorksSection } from "@/components/tokeniz/HowItWorksSection";
-import { FeaturesSection } from "@/components/tokeniz/FeaturesSection";
-import { VisionSection } from "@/components/tokeniz/VisionSection";
-import { PricingSection } from "@/components/tokeniz/PricingSection";
-import { TestimonialsSection } from "@/components/tokeniz/TestimonialsSection";
-import { FAQSection } from "@/components/tokeniz/FAQSection";
+import { ResultOptionsSection } from "@/components/tokeniz/ResultOptionsSection";
+import { EntityTypesSection } from "@/components/tokeniz/EntityTypesSection";
+import { PartnersSection } from "@/components/tokeniz/PartnersSection";
 import { CTASection } from "@/components/tokeniz/CTASection";
 import { Footer } from "@/components/tokeniz/Footer";
+import { QuizModal } from "@/components/tokeniz/QuizModal";
 
 const Index = () => {
-  useScrollReveal();
+  const [quizOpen, setQuizOpen] = useState(false);
+  const openQuiz = () => setQuizOpen(true);
+  const closeQuiz = () => setQuizOpen(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
-      <HeroSection />
-      <StatsSection />
+    <>
+      <Header onOpenQuiz={openQuiz} />
+      <HeroSection onOpenQuiz={openQuiz} />
+      <TrustStrip />
       <ProblemSection />
-      <AudienceSection />
       <HowItWorksSection />
-      <FeaturesSection />
-      <VisionSection />
-      <PricingSection />
-      <TestimonialsSection />
-      <FAQSection />
-      <CTASection />
+      <ResultOptionsSection onOpenQuiz={openQuiz} />
+      <EntityTypesSection />
+      <PartnersSection />
+      <CTASection onOpenQuiz={openQuiz} />
       <Footer />
-    </div>
+      <QuizModal open={quizOpen} onClose={closeQuiz} />
+    </>
   );
 };
 
