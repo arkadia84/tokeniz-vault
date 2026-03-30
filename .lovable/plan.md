@@ -1,35 +1,41 @@
 
+Fix the header-gap issue by tightening the hero’s top spacing further. The previous change to `.hero` is already present in `src/index.css`, so that edit did not fully close the visible gap.
 
-## Fix: QuizModal false-positive error from supabase.functions.invoke
-
-### Problem
-
-The edge function executes successfully (returns HTTP 200 with `{ success: true, emailSent: true }`), but the frontend shows "Something went wrong." The `supabase.functions.invoke` returns `{ data, error }` where `error` can be a `FunctionsHttpError` wrapping a non-error response. The current code checks `if (error)` which catches these false positives.
-
-### Root cause
-
-`supabase.functions.invoke` in v2 can return a non-null `error` of type `FunctionsHttpError` even for 200 responses in certain parsing edge cases. The fix is to use `{ data, error }` more defensively — check the `data` payload for `success: true` instead of relying solely on `error` being null.
-
-### Change
-
-**`src/components/tokeniz/QuizModal.tsx`** — Update `handleSubmitEmail` to check the response data instead of relying on the error object:
-
-```typescript
-const { data, error } = await supabase.functions.invoke("send-confirmation", { body: { ... } });
-
-if (error) {
-  console.error("Edge function error:", error);
-  // Check if data still indicates success (false-positive error)
-  if (!data?.success) {
-    setHint("Something went wrong — please try again.");
-    setSending(false);
-    return;
+### What I found
+- `src/index.css` already has:
+  ```css
+  .hero {
+    padding: 64px 0 96px;
   }
+  ```
+- The homepage still renders the first hero content too far below the sticky nav.
+- The gap is created by the hero section itself, not by the header component.
+- There is also a separate global rule:
+  ```css
+  section { padding: 88px 0; }
+  ```
+  but the hero has its own `.hero` rule, so the safest fix is to adjust only `.hero`.
+
+### Proposed fix
+Update only `src/index.css`:
+- Reduce `.hero` top padding again, from `64px` to a smaller value matching the reference more closely, likely around `32px` to `40px`.
+- Keep the bottom padding unchanged so the rest of the page stays intact.
+
+Example target:
+```css
+.hero {
+  padding: 36px 0 96px;
 }
 ```
 
-This ensures that if the function actually succeeded (data.success === true), the UI shows the success message even if the Supabase client wraps the response in an error object.
+### Why this is the right fix
+- It changes only the spacing above the hero content.
+- It does not affect the sticky header height.
+- It does not alter other sections or layout wrappers.
+- It directly addresses the exact visible gap the user is reporting.
 
-### Files modified
-- `src/components/tokeniz/QuizModal.tsx` — More resilient error handling for edge function response
+### Technical note
+There are also unrelated React ref warnings involving `Footer` and `QuizModal`, but they are not the cause of the top spacing issue and should not be touched in this fix.
 
+### Files to update
+- `src/index.css`
