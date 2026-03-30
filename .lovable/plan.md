@@ -1,41 +1,58 @@
 
-Fix the header-gap issue by tightening the hero’s top spacing further. The previous change to `.hero` is already present in `src/index.css`, so that edit did not fully close the visible gap.
+Fix the actual cause of the gap above the navbar.
 
 ### What I found
-- `src/index.css` already has:
-  ```css
-  .hero {
-    padding: 64px 0 96px;
-  }
-  ```
-- The homepage still renders the first hero content too far below the sticky nav.
-- The gap is created by the hero section itself, not by the header component.
-- There is also a separate global rule:
-  ```css
-  section { padding: 88px 0; }
-  ```
-  but the hero has its own `.hero` rule, so the safest fix is to adjust only `.hero`.
+The gap is not coming from the navbar or hero anymore.
 
-### Proposed fix
-Update only `src/index.css`:
-- Reduce `.hero` top padding again, from `64px` to a smaller value matching the reference more closely, likely around `32px` to `40px`.
-- Keep the bottom padding unchanged so the rest of the page stays intact.
-
-Example target:
+From the live page:
+- there are **two notification regions rendered above the nav**
+- `src/App.tsx` mounts both:
+  - `<Toaster />`
+  - `<Sonner />`
+- `src/index.css` has this global rule:
 ```css
-.hero {
-  padding: 36px 0 96px;
+section:not([data-sonner-toaster]) { padding: 88px 0; }
+```
+
+That rule is too broad. It applies page spacing to any `<section>` in the app, including the notification/toast container rendered before the navbar. That creates the large empty band above the nav.
+
+### Implementation plan
+1. **Remove the unused Sonner mount from `src/App.tsx`**
+   - Delete the `Sonner` import
+   - Delete `<Sonner />`
+   - Keep the existing `<Toaster />`
+
+2. **Harden the page spacing rule in `src/index.css`**
+   - Stop styling every `<section>` globally
+   - Replace the broad selector with explicit selectors for the real landing-page sections only
+   - This prevents any third-party `<section>` (toast, dialog internals, future components) from ever creating page gaps again
+
+### Exact direction
+Instead of:
+```css
+section:not([data-sonner-toaster]) { padding: 88px 0; }
+```
+
+Use explicit page sections, for example:
+```css
+.hero,
+.problem-bg,
+#how-it-works,
+.options-bg,
+#entities,
+.final-cta {
+  padding: 88px 0;
 }
 ```
 
-### Why this is the right fix
-- It changes only the spacing above the hero content.
-- It does not affect the sticky header height.
-- It does not alter other sections or layout wrappers.
-- It directly addresses the exact visible gap the user is reporting.
+Then keep the custom overrides already defined for sections like `.hero`, `.trust-strip`, etc.
 
-### Technical note
-There are also unrelated React ref warnings involving `Footer` and `QuizModal`, but they are not the cause of the top spacing issue and should not be touched in this fix.
+### Why this fixes it
+- Removes the empty notification block that is sitting above the navbar
+- Prevents global section padding from affecting non-page UI
+- Leaves the rest of the landing page design intact
+- Avoids more guesswork on hero top padding
 
 ### Files to update
+- `src/App.tsx`
 - `src/index.css`
