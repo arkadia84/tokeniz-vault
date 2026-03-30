@@ -186,7 +186,7 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
         answerTexts[key] = answers[key]?.text || "";
       }
 
-      const { error } = await supabase.functions.invoke("send-confirmation", {
+      const { data, error } = await supabase.functions.invoke("send-confirmation", {
         body: {
           email,
           tier,
@@ -198,9 +198,11 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
 
       if (error) {
         console.error("Edge function error:", error);
-        setHint("Something went wrong — please try again.");
-        setSending(false);
-        return;
+        if (!data?.success) {
+          setHint("Something went wrong — please try again.");
+          setSending(false);
+          return;
+        }
       }
 
       setEmailSent(true);
