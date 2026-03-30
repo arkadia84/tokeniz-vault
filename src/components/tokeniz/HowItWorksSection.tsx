@@ -1,70 +1,45 @@
 const steps = [
   {
-    num: "01",
-    icon: "🏢",
-    title: "Create a Tokenized Company",
-    desc: "Launch a US Series LLC — a digital-native company structure designed for modern entrepreneurs and asset owners. No lawyer, no US address, no notary required.",
-    time: "~10 minutes",
-    active: true,
+    num: 1,
+    title: "Answer 5 questions about your situation",
+    desc: "Where you're based, where your customers are, what you're building, and what matters most to you. Takes two minutes. No signup required.",
   },
   {
-    num: "02",
-    icon: "💼",
-    title: "Attach Assets or Ventures",
-    desc: "Real estate, funds, startups, infrastructure projects or digital businesses. Each Series LLC cell isolates your assets with legal separation built in.",
-    time: "Same day",
+    num: 2,
+    title: "Get your personalised match",
+    desc: "Your recommended entity type, jurisdiction, and the financial access partners most likely to approve your profile — ranked by fit, not by who pays us the most.",
   },
   {
-    num: "03",
-    icon: "🔗",
-    title: "Tokenize Ownership",
-    desc: "Enable fractional participation, manage cap tables on-chain, and transfer ownership globally. Compliant legal structures combined with programmable digital infrastructure.",
-    time: "Automated",
+    num: 3,
+    title: "Choose your level of support",
+    desc: "Get your personalised action plan by email and apply yourself for free. Or let Tokeniz handle the whole process — from formation to financial access — protecting every application.",
   },
   {
-    num: "04",
-    icon: "🌍",
-    title: "Operate Globally",
-    desc: "Your global business account is open. Your Visa Platinum card is issued. Send money to 100+ countries, receive in USDC/USDT, and let the AI financial assistant run your operations.",
-    time: "Ongoing",
+    num: 4,
+    title: "Launch and operate",
+    desc: "Your company is formed, your business account is open, and you're ready to receive payments globally — without the months of trial and error.",
   },
 ];
 
 export function HowItWorksSection() {
   return (
-    <section id="how" className="relative py-24 lg:py-24 px-5">
-      <div className="max-w-[1100px] mx-auto">
-        <p className="fade-up text-[0.7rem] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 mb-4 text-center">How it works</p>
-        <h2 className="fade-up text-3xl sm:text-4xl lg:text-[2.8rem] font-black tracking-tight leading-[1.1] mb-4 text-center" style={{ letterSpacing: "-0.03em" }}>
-          How Tokeniz Works
-        </h2>
-        <p className="fade-up fade-up-delay-1 text-base text-muted-foreground max-w-[560px] mx-auto text-center mb-12 leading-[1.75]">
-          Four steps from traditional company to globally accessible digital infrastructure.
-        </p>
-
-        <div className="flex flex-col gap-0">
-          {steps.map((step) => (
-            <div
-              key={step.num}
-              className={`fade-up flex items-start gap-5 p-6 rounded-2xl border transition-all duration-300 ${
-                step.active
-                  ? "bg-card border-primary/25"
-                  : "border-transparent hover:bg-card/50 hover:border-border/50"
-              }`}
-            >
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs font-bold text-primary/60">{step.num}</span>
-                <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center text-lg">
-                  {step.icon}
-                </div>
+    <section id="how-it-works">
+      <div className="container">
+        <div className="section-header">
+          <div className="tag">How It Works</div>
+          <h2>One quiz. One recommendation.<br />A clear path forward.</h2>
+        </div>
+        <div className="flow-wrap">
+          {steps.map((step, i) => (
+            <div key={step.num} className="flow-row">
+              <div className="flow-left">
+                <div className="flow-num">{step.num}</div>
+                {i < steps.length - 1 && <div className="flow-line" />}
               </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-base font-bold text-foreground mb-1">{step.title}</h4>
-                <p className="text-sm text-muted-foreground leading-[1.7]">{step.desc}</p>
+              <div className="flow-content">
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
               </div>
-              <span className="text-[0.72rem] font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full whitespace-nowrap shrink-0 self-start">
-                {step.time}
-              </span>
             </div>
           ))}
         </div>
