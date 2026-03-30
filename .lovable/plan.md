@@ -1,58 +1,52 @@
 
-Fix the actual cause of the gap above the navbar.
 
-### What I found
-The gap is not coming from the navbar or hero anymore.
+## Fix: QuizModal mobile responsiveness
 
-From the live page:
-- there are **two notification regions rendered above the nav**
-- `src/App.tsx` mounts both:
-  - `<Toaster />`
-  - `<Sonner />`
-- `src/index.css` has this global rule:
+### Problems at 390px viewport
+1. **Modal too tall** — `.modal` has `padding: 36px` and no height constraint, so content overflows off-screen on the result page (tier cards + tokenization + email row + hint text)
+2. **Result screen not scrollable** — no `overflow-y: auto` or `max-height`, so bottom elements (email input, send button) are unreachable
+3. **Tier cards cramped** — `.result-path` uses horizontal flex with price and arrow, which gets squeezed on small screens
+4. **Tokenization block** — flex row layout with button doesn't wrap well at 390px
+5. **Email row** — already stacks at 600px breakpoint, but the modal itself still clips
+
+### Changes — single file: `src/index.css`
+
+Add a mobile media query block for the modal (at `max-width: 600px`):
+
 ```css
-section:not([data-sonner-toaster]) { padding: 88px 0; }
-```
+@media (max-width: 600px) {
+  /* Modal: full-screen on mobile, scrollable */
+  .modal-overlay { padding: 8px; }
+  .modal {
+    padding: 20px 16px;
+    border-radius: 14px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
 
-That rule is too broad. It applies page spacing to any `<section>` in the app, including the notification/toast container rendered before the navbar. That creates the large empty band above the nav.
+  /* Smaller text and spacing in quiz screens */
+  .quiz-q { font-size: 1rem; }
+  .quiz-sub { font-size: 0.8rem; margin-bottom: 16px; }
+  .quiz-opts { gap: 8px; margin-bottom: 20px; }
+  .qopt { padding: 11px 12px; font-size: 0.82rem; gap: 10px; }
+  .quiz-progress-bar { margin-bottom: 20px; }
 
-### Implementation plan
-1. **Remove the unused Sonner mount from `src/App.tsx`**
-   - Delete the `Sonner` import
-   - Delete `<Sonner />`
-   - Keep the existing `<Toaster />`
-
-2. **Harden the page spacing rule in `src/index.css`**
-   - Stop styling every `<section>` globally
-   - Replace the broad selector with explicit selectors for the real landing-page sections only
-   - This prevents any third-party `<section>` (toast, dialog internals, future components) from ever creating page gaps again
-
-### Exact direction
-Instead of:
-```css
-section:not([data-sonner-toaster]) { padding: 88px 0; }
-```
-
-Use explicit page sections, for example:
-```css
-.hero,
-.problem-bg,
-#how-it-works,
-.options-bg,
-#entities,
-.final-cta {
-  padding: 88px 0;
+  /* Tier cards: stack price below title */
+  .result-path {
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    gap: 6px;
+  }
+  .rp-left { width: 100%; }
+  .rp-left h4 { font-size: 0.82rem; }
+  .rp-left p { font-size: 0.72rem; }
+  .rp-price { font-size: 0.9rem; }
+  .rp-arrow { display: none; }
 }
 ```
 
-Then keep the custom overrides already defined for sections like `.hero`, `.trust-strip`, etc.
-
-### Why this fixes it
-- Removes the empty notification block that is sitting above the navbar
-- Prevents global section padding from affecting non-page UI
-- Leaves the rest of the landing page design intact
-- Avoids more guesswork on hero top padding
+These rules merge into the existing `@media (max-width: 600px)` block. The key fix is `max-height: 90vh; overflow-y: auto` on `.modal` so the result screen scrolls and all elements remain reachable.
 
 ### Files to update
-- `src/App.tsx`
-- `src/index.css`
+- `src/index.css` — add mobile modal rules inside the existing 600px breakpoint
+
