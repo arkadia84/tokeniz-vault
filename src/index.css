@@ -80,6 +80,27 @@ body {
 }
 .nav-link:hover { color: var(--text); }
 
+/* Mobile nav */
+.nav-hamburger {
+  display: none;
+  background: none; border: none; color: var(--text);
+  cursor: pointer; padding: 4px;
+}
+.nav-mobile-menu {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(8,14,28,0.96);
+}
+.nav-mobile-menu .nav-link {
+  font-size: 0.95rem; padding: 6px 0;
+}
+
+@media (max-width: 600px) {
+  .nav-desktop { display: none !important; }
+  .nav-hamburger { display: block; }
+}
+
 /* ── HERO ────────────────────────────────────────────────────────── */
 .hero {
   padding: 36px 0 96px;
