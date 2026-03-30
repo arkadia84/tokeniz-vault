@@ -532,4 +532,32 @@ body {
   .entity-grid { grid-template-columns: 1fr; }
   .trust-inner { gap: 18px; }
   .email-row { flex-direction: column; }
+
+  /* Modal: scrollable on mobile */
+  .modal-overlay { padding: 8px; }
+  .modal {
+    padding: 20px 16px;
+    border-radius: 14px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Smaller text and spacing in quiz screens */
+  .quiz-q { font-size: 1rem; }
+  .quiz-sub { font-size: 0.8rem; margin-bottom: 16px; }
+  .quiz-opts { gap: 8px; margin-bottom: 20px; }
+  .qopt { padding: 11px 12px; font-size: 0.82rem; gap: 10px; }
+  .quiz-progress-bar { margin-bottom: 20px; }
+
+  /* Tier cards: stack price below title */
+  .result-path {
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    gap: 6px;
+  }
+  .rp-left { width: 100%; }
+  .rp-left h4 { font-size: 0.82rem; }
+  .rp-left p { font-size: 0.72rem; }
+  .rp-price { font-size: 0.9rem; }
+  .rp-arrow { display: none; }
 }
