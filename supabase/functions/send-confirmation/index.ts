@@ -16,6 +16,289 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+interface PartnerInfo {
+  formationName: string;
+  formationDesc: string;
+  formationLink: string;
+  bank1Name: string;
+  bank1Desc: string;
+  bank2Name: string;
+  bank2Desc: string;
+  stablecoinName?: string;
+  stablecoinDesc?: string;
+}
+
+function getPartners(entityName: string): PartnerInfo {
+  if (entityName === "Singapore Pte Ltd") {
+    return {
+      formationName: "Elephants",
+      formationDesc: "Trusted Singapore incorporation partner for non-resident founders. Handles nominee directors, registered address, and compliance filings.",
+      formationLink: "https://app.elephants.inc/onboard/signup?referral=PROPEX",
+      bank1Name: "Aspire",
+      bank1Desc: "Multi-currency business account built for startups in APAC. Fast onboarding, competitive FX, and integrations with accounting tools.",
+      bank2Name: "Wise Business",
+      bank2Desc: "Global multi-currency account with low-cost international transfers. Ideal as a secondary account for receiving payments worldwide.",
+      stablecoinName: "BVNK",
+      stablecoinDesc: "Enterprise-grade stablecoin account for payments and treasury. Supports USDC, USDT, and fiat on/off-ramps.",
+    };
+  }
+  // Delaware C-Corp or Wyoming LLC
+  return {
+    formationName: "Fileforms",
+    formationDesc: "Fast, affordable US entity formation for non-resident founders. Handles EIN, registered agent, and state filings.",
+    formationLink: "https://register.fileforms.com/partner-file-now-cta-v2/?REFERRALCODE=recM4mmc9COERzwg5",
+    bank1Name: "Mercury",
+    bank1Desc: "The go-to US business banking platform for startups. No minimum balance, fast onboarding, and built-in financial tools.",
+    bank2Name: "Relay",
+    bank2Desc: "US business banking with smart budgeting and multiple accounts. Good alternative for non-resident founders if Mercury isn't available.",
+  };
+}
+
+const tierSubjects: Record<string, string> = {
+  free: "Your Tokeniz Match — Free Action Plan",
+  guided: "Your Tokeniz Match — Guided Advisory ($497)",
+  fasttrack: "Your Tokeniz Match — Fast Track Advisory ($997)",
+};
+
+function buildTierBlock(tier: string): string {
+  if (tier === "guided") {
+    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f5ff;border:1px solid #c3d4fd;border-radius:12px;margin-bottom:36px;">
+      <tr><td style="padding:24px 28px;">
+        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5b8ff9;">Guided — $497</p>
+        <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">Great choice — let's get you started.</p>
+        <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">Here's how it works: once you confirm, we'll send you the payment link and set up a shared WhatsApp or Telegram chat within 24 hours. From there, we walk you through every step — which bank to approach first, exactly what to say, how to respond to follow-up requests, and when to move to the next option.</p>
+        <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#2d3748;">To get started, reply to this email with:</p>
+        <p style="margin:0;font-size:13px;color:#2d3748;line-height:1.9;">📱 <strong>WhatsApp:</strong> +[your number with country code]<br/>✈️ <strong>Telegram:</strong> @[your username] (if you prefer TG)<br/>🌍 <strong>Your timezone</strong> — so we reach you at the right time</p>
+      </td></tr>
+    </table>`;
+  }
+  if (tier === "fasttrack") {
+    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;margin-bottom:36px;">
+      <tr><td style="padding:24px 28px;">
+        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#f97316;">⚡ Fast Track — $997</p>
+        <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">We'll move quickly — here's what to do now.</p>
+        <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">You've chosen our priority slot. Same hands-on guidance as Guided, with a dedicated response time and a target of 10 business days to get you operational. Once you confirm, we send the payment link and open the shared chat the same day.</p>
+        <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#2d3748;">Reply now with:</p>
+        <p style="margin:0;font-size:13px;color:#2d3748;line-height:1.9;">📱 <strong>WhatsApp:</strong> +[your number with country code]<br/>✈️ <strong>Telegram:</strong> @[your username] (if you prefer TG)<br/>🌍 <strong>Your timezone</strong> — so we can start immediately</p>
+      </td></tr>
+    </table>`;
+  }
+  // free
+  return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:36px;">
+    <tr><td style="padding:24px 28px;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0aec0;">✓ Self-Serve — Free</p>
+      <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">Your action plan is above — you're all set.</p>
+      <p style="margin:0 0 14px;font-size:13px;color:#4a5568;line-height:1.6;">Follow the steps in order, use the referral links provided, and read the notes before submitting any banking application. The order matters — a rejected application creates a compliance trail that can quietly close doors with the next institution.</p>
+      <p style="margin:0;font-size:13px;color:#4a5568;line-height:1.6;">Questions? Reply to this email anytime. If at any point you'd like us to walk you through it live, you can upgrade to the Guided option — just reply and we'll get you sorted.</p>
+    </td></tr>
+  </table>`;
+}
+
+function buildEmailHtml(data: {
+  firstName: string;
+  email: string;
+  answers: Record<string, string>;
+  entityName: string;
+  entityReason: string;
+  tier: string;
+  partners: PartnerInfo;
+}): string {
+  const { firstName, email, answers, entityName, entityReason, tier, partners } = data;
+
+  const stablecoinBlock = partners.stablecoinName
+    ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e2e8f0;border-radius:10px;margin-bottom:28px;">
+        <tr><td style="padding:18px 20px;">
+          <p style="margin:0 0 3px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0aec0;">Stablecoin Account</p>
+          <p style="margin:0 0 5px;font-size:15px;font-weight:700;color:#2d3748;">${partners.stablecoinName}</p>
+          <p style="margin:0;font-size:13px;color:#718096;line-height:1.5;">${partners.stablecoinDesc}</p>
+        </td></tr>
+      </table>`
+    : "";
+
+  const tierBlock = buildTierBlock(tier);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Tokeniz Match is Ready</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f0f2f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:#f0f2f5;">
+    Your personalised entity match + recommended partners are ready. Here's your roadmap. &#8199;&#65279;&#847;
+  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f2f5;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#0a1628 0%,#1a2e5a 100%);padding:36px 40px 28px;text-align:center;">
+            <div style="font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;margin-bottom:8px;">Token<span style="color:#5b8ff9;">iz</span></div>
+            <div style="font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);">Smart Company Formation &amp; Financial Access</div>
+          </td>
+        </tr>
+        <!-- Hero line -->
+        <tr>
+          <td style="background:#5b8ff9;padding:12px 40px;text-align:center;">
+            <p style="margin:0;font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.06em;text-transform:uppercase;">🎯 Your Personalised Match is Ready</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:36px 40px 0;">
+            <p style="margin:0 0 20px;font-size:16px;color:#1a202c;line-height:1.6;">Hi <strong>${firstName}</strong>,</p>
+            <p style="margin:0 0 28px;font-size:15px;color:#4a5568;line-height:1.7;">Thank you for completing the Tokeniz Smart Match quiz. Based on your answers, we've built your personalised roadmap below — including the entity structure we recommend and the vetted partners best suited to your profile.</p>
+
+            <!-- Quiz Summary -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:28px;">
+              <tr><td style="padding:20px 24px;">
+                <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#718096;">Your Quiz Answers</p>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#718096;width:50%;">Current situation</td>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#2d3748;font-weight:600;">${answers.q1 || "—"}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#718096;">Based in</td>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#2d3748;font-weight:600;">${answers.q2 || "—"}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#718096;">Primary market</td>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#2d3748;font-weight:600;">${answers.q3 || "—"}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#718096;">Building</td>
+                    <td style="padding:6px 0;border-bottom:1px solid #edf2f7;font-size:13px;color:#2d3748;font-weight:600;">${answers.q4 || "—"}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;font-size:13px;color:#718096;">Priority right now</td>
+                    <td style="padding:6px 0;font-size:13px;color:#2d3748;font-weight:600;">${answers.q5 || "—"}</td>
+                  </tr>
+                </table>
+              </td></tr>
+            </table>
+
+            <!-- Entity Match -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:linear-gradient(135deg,#0f1e3a 0%,#1a3060 100%);border-radius:12px;margin-bottom:28px;">
+              <tr><td style="padding:24px 28px;">
+                <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5b8ff9;">✓ Your Recommended Entity</p>
+                <p style="margin:0 0 8px;font-size:20px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;">${entityName}</p>
+                <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;">${entityReason}</p>
+              </td></tr>
+            </table>
+
+            <!-- Partners -->
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#718096;">🔓 Your Matched Partners</p>
+            <p style="margin:0 0 18px;font-size:13px;color:#718096;line-height:1.6;">These are the specific partners we recommend for your profile. They have been selected based on your residency, industry, and business model — not because they pay us to recommend them.</p>
+
+            <!-- Formation -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e2e8f0;border-radius:10px;margin-bottom:12px;">
+              <tr><td style="padding:18px 20px;">
+                <p style="margin:0 0 3px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0aec0;">Formation</p>
+                <p style="margin:0 0 5px;font-size:15px;font-weight:700;color:#2d3748;"><a href="${partners.formationLink}" style="color:#2d3748;text-decoration:none;">${partners.formationName}</a></p>
+                <p style="margin:0;font-size:13px;color:#718096;line-height:1.5;">${partners.formationDesc}</p>
+                <p style="margin:8px 0 0;"><a href="${partners.formationLink}" style="font-size:12px;color:#5b8ff9;text-decoration:none;font-weight:600;">Start Formation →</a></p>
+              </td></tr>
+            </table>
+
+            <!-- Banking 1 -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e2e8f0;border-radius:10px;margin-bottom:12px;">
+              <tr><td style="padding:18px 20px;">
+                <p style="margin:0 0 3px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0aec0;">Business Banking — Primary</p>
+                <p style="margin:0 0 5px;font-size:15px;font-weight:700;color:#2d3748;">${partners.bank1Name}</p>
+                <p style="margin:0;font-size:13px;color:#718096;line-height:1.5;">${partners.bank1Desc}</p>
+              </td></tr>
+            </table>
+
+            <!-- Banking 2 -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e2e8f0;border-radius:10px;margin-bottom:${partners.stablecoinName ? "12" : "28"}px;">
+              <tr><td style="padding:18px 20px;">
+                <p style="margin:0 0 3px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0aec0;">Business Banking — Alternative</p>
+                <p style="margin:0 0 5px;font-size:15px;font-weight:700;color:#2d3748;">${partners.bank2Name}</p>
+                <p style="margin:0;font-size:13px;color:#718096;line-height:1.5;">${partners.bank2Desc}</p>
+              </td></tr>
+            </table>
+
+            ${stablecoinBlock}
+
+            <!-- Action Plan -->
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#718096;">📋 Your Next Steps</p>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+              <tr><td style="padding:10px 0;border-bottom:1px solid #f0f2f5;vertical-align:top;">
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:28px;height:28px;background:#5b8ff9;border-radius:50%;text-align:center;vertical-align:middle;font-size:12px;font-weight:700;color:#fff;">1</td>
+                  <td style="padding-left:14px;font-size:13px;color:#4a5568;line-height:1.6;">Register your entity via the formation partner link above. Use the referral link for any discounts or priority handling we've negotiated.</td>
+                </tr></table>
+              </td></tr>
+              <tr><td style="padding:10px 0;border-bottom:1px solid #f0f2f5;vertical-align:top;">
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:28px;height:28px;background:#5b8ff9;border-radius:50%;text-align:center;vertical-align:middle;font-size:12px;font-weight:700;color:#fff;">2</td>
+                  <td style="padding-left:14px;font-size:13px;color:#4a5568;line-height:1.6;">Once your entity is formed, prepare the documents listed in the checklist below before applying to any bank. <strong>Do not apply without reading it first</strong> — a poorly prepared application can create a compliance trail.</td>
+                </tr></table>
+              </td></tr>
+              <tr><td style="padding:10px 0;border-bottom:1px solid #f0f2f5;vertical-align:top;">
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:28px;height:28px;background:#5b8ff9;border-radius:50%;text-align:center;vertical-align:middle;font-size:12px;font-weight:700;color:#fff;">3</td>
+                  <td style="padding-left:14px;font-size:13px;color:#4a5568;line-height:1.6;">Apply to <strong>${partners.bank1Name}</strong> first. We've listed the exact fields where non-resident founders typically get stuck — read the notes before you submit.</td>
+                </tr></table>
+              </td></tr>
+              <tr><td style="padding:10px 0;vertical-align:top;">
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:28px;height:28px;background:#5b8ff9;border-radius:50%;text-align:center;vertical-align:middle;font-size:12px;font-weight:700;color:#fff;">4</td>
+                  <td style="padding-left:14px;font-size:13px;color:#4a5568;line-height:1.6;">If you chose a paid tier, you'll hear from us within 24 hours on WhatsApp or Telegram to walk through the steps together.</td>
+                </tr></table>
+              </td></tr>
+            </table>
+
+            <!-- Tier Block -->
+            ${tierBlock}
+
+            <!-- Disclaimer -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:32px;">
+              <tr><td style="padding:20px 24px;">
+                <p style="margin:0 0 10px;font-size:11px;color:#a0aec0;line-height:1.7;">
+                  <strong style="color:#718096;">Not Legal or Financial Advice.</strong> Tokeniz provides technology-driven recommendations based on the quiz answers you submitted. This email does not constitute legal, tax, or financial advice. Always consult a licensed professional before making entity formation, banking, or investment decisions.
+                </p>
+                <p style="margin:0 0 10px;font-size:11px;color:#a0aec0;line-height:1.7;">
+                  <strong style="color:#718096;">Jurisdictional Limitations.</strong> Not all services, entity types, or banking partners are available in all countries. Tokeniz does not represent that its services comply with the laws of any specific jurisdiction.
+                </p>
+                <p style="margin:0 0 10px;font-size:11px;color:#a0aec0;line-height:1.7;">
+                  <strong style="color:#718096;">Data &amp; Privacy.</strong> By submitting your quiz responses and email address, you agree to our <a href="https://tokeniz.ai/privacy" style="color:#5b8ff9;text-decoration:none;">Privacy Policy</a>, <a href="https://tokeniz.ai/terms" style="color:#5b8ff9;text-decoration:none;">Terms of Service</a>, and <a href="https://tokeniz.ai/dpa" style="color:#5b8ff9;text-decoration:none;">Data Processing Addendum</a>.
+                </p>
+                <p style="margin:0;font-size:11px;color:#a0aec0;line-height:1.7;">
+                  <strong style="color:#718096;">Referral Relationships.</strong> Tokeniz may receive referral fees or commissions from third-party partners when you use their services through our links. This does not influence the recommendations we make.
+                </p>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f7f9fc;border-top:1px solid #e2e8f0;padding:24px 40px;border-radius:0 0 16px 16px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td>
+                <p style="margin:0 0 4px;font-size:13px;font-weight:800;color:#1a202c;letter-spacing:-0.02em;">Token<span style="color:#5b8ff9;">iz</span></p>
+                <p style="margin:0 0 12px;font-size:11px;color:#a0aec0;">Smart company formation &amp; financial access for global founders.</p>
+                <p style="margin:0;font-size:11px;color:#a0aec0;line-height:1.7;">
+                  <a href="https://tokeniz.ai" style="color:#5b8ff9;text-decoration:none;">tokeniz.ai</a>
+                  &nbsp;·&nbsp;
+                  <a href="mailto:hello@tokeniz.ai" style="color:#5b8ff9;text-decoration:none;">hello@tokeniz.ai</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://tokeniz.ai/unsubscribe?email=${email}" style="color:#a0aec0;text-decoration:none;">Unsubscribe</a>
+                </p>
+                <p style="margin:8px 0 0;font-size:10px;color:#cbd5e0;">© 2026 Tokeniz. All rights reserved.</p>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
 Deno.serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
 
@@ -24,7 +307,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email } = await req.json();
+    const body = await req.json();
+    const { email, answers, tier, entity, tokenInterest } = body;
 
     if (!email || typeof email !== "string") {
       return new Response(JSON.stringify({ error: "Valid email is required" }), {
@@ -33,7 +317,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email) || email.length > 255) {
       return new Response(JSON.stringify({ error: "Invalid email format" }), {
@@ -47,7 +330,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Rate limiting: max 5 requests per IP per hour
+    // Rate limiting
     const forwarded = req.headers.get("x-forwarded-for") || "";
     const ips = forwarded.split(",").map(s => s.trim()).filter(Boolean);
     const ip = ips[ips.length - 1] || "unknown";
@@ -67,7 +350,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Record this request for rate limiting
     await supabase.from("rate_limits").insert({
       ip_address: ip,
       endpoint: "send-confirmation",
@@ -82,75 +364,40 @@ Deno.serve(async (req) => {
       console.error("DB error:", dbError);
     }
 
-    // Send confirmation email via Resend
+    // Send email via Resend
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (!resendApiKey) {
       console.error("RESEND_API_KEY not configured");
       return new Response(
         JSON.stringify({ success: true, emailSent: false }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const calendarLink = "https://calendar.app.google/oj4GCa72dQYVC22RA";
+    const firstName = email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "there";
+    const selectedTier = tier || "free";
+    const entityName = entity?.entity || "Wyoming LLC";
+    const entityReason = entity?.subline || "";
+    const partners = getPartners(entityName);
 
-    const emailHtml = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="margin:0;padding:0;background-color:#0a0e1a;font-family:'Helvetica Neue',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0e1a;padding:40px 20px;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#111827;border-radius:12px;border:1px solid rgba(255,255,255,0.1);overflow:hidden;">
-          <!-- Header -->
-          <tr>
-            <td style="padding:40px 40px 20px 40px;">
-              <h1 style="margin:0;font-size:24px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Tokeniz</h1>
-            </td>
-          </tr>
-          <!-- Body -->
-          <tr>
-            <td style="padding:20px 40px 10px 40px;">
-              <h2 style="margin:0 0 16px 0;font-size:22px;font-weight:600;color:#ffffff;">Welcome to the Future of Ownership</h2>
-              <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#9ca3af;">
-                Thank you for joining the early adopters of <strong style="color:#ffffff;">Tokeniz</strong>. We're building the infrastructure for tokenized companies and real-world assets — and you're now part of it.
-              </p>
-              <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#9ca3af;">
-                We'll keep you updated on our progress and let you know as soon as early access is available.
-              </p>
-            </td>
-          </tr>
-          <!-- CTA -->
-          <tr>
-            <td style="padding:10px 40px 20px 40px;">
-              <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#9ca3af;">
-                Have questions or want to see a live demo? Book a call with our team:
-              </p>
-              <a href="${calendarLink}" style="display:inline-block;padding:12px 28px;background-color:#3b82f6;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
-                Book a Live Demo
-              </a>
-            </td>
-          </tr>
-          <!-- Footer -->
-          <tr>
-            <td style="padding:30px 40px 40px 40px;border-top:1px solid rgba(255,255,255,0.05);">
-              <p style="margin:0;font-size:12px;color:#6b7280;">
-                Tokeniz — Infrastructure for tokenized companies and real-world assets.
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
+    const quizAnswers: Record<string, string> = {};
+    if (answers) {
+      for (const key of ["q1", "q2", "q3", "q4", "q5"]) {
+        quizAnswers[key] = answers[key] || "—";
+      }
+    }
+
+    const emailHtml = buildEmailHtml({
+      firstName,
+      email,
+      answers: quizAnswers,
+      entityName,
+      entityReason,
+      tier: selectedTier,
+      partners,
+    });
+
+    const subject = tierSubjects[selectedTier] || tierSubjects.free;
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -162,7 +409,7 @@ Deno.serve(async (req) => {
         from: "Tokeniz <hello@tokeniz.ai>",
         to: [email],
         cc: ["admin@propex.app"],
-        subject: "Welcome to Tokeniz — You're on the Early Access List!",
+        subject,
         html: emailHtml,
       }),
     });
@@ -172,20 +419,18 @@ Deno.serve(async (req) => {
       console.error("Resend error:", resendData);
     }
 
+    // Log extra data
+    console.log("Quiz lead:", { email, tier: selectedTier, entityName, tokenInterest: !!tokenInterest });
+
     return new Response(
       JSON.stringify({ success: true, emailSent: res.ok }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Error:", error);
     return new Response(
       JSON.stringify({ error: "Internal server error" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });

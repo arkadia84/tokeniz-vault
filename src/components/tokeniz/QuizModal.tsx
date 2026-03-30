@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Answers {
   [key: string]: { text: string; speed?: boolean };
@@ -117,6 +118,7 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
   const [showResult, setShowResult] = useState(false);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [tokenInterest, setTokenInterest] = useState(false);
   const [hint, setHint] = useState("Select a tier above, then enter your email — we'll be in touch within 24 hours.");
   const emailRef = useRef<HTMLInputElement>(null);
@@ -129,6 +131,7 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
     setShowResult(false);
     setSelectedTier(null);
     setEmailSent(false);
+    setSending(false);
     setTokenInterest(false);
     setHint("Select a tier above, then enter your email — we'll be in touch within 24 hours.");
   }, []);
@@ -166,16 +169,48 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
     emailRef.current?.focus();
   };
 
-  const handleSubmitEmail = () => {
+  const handleSubmitEmail = async () => {
     const email = emailRef.current?.value.trim() || "";
     if (!email || !email.includes("@")) {
       if (emailRef.current) emailRef.current.style.borderColor = "red";
       return;
     }
+
     const tier = selectedTier || "free";
-    setEmailSent(true);
-    setHint(`We've received your request for the ${tierLabels[tier]}. Check your inbox — we'll follow up within 24 hours.`);
-    console.log("Lead captured:", { email, tier, answers });
+    const result = resolveEntity(answers);
+
+    setSending(true);
+    try {
+      const answerTexts: Record<string, string> = {};
+      for (const key of ["q1", "q2", "q3", "q4", "q5"]) {
+        answerTexts[key] = answers[key]?.text || "";
+      }
+
+      const { error } = await supabase.functions.invoke("send-confirmation", {
+        body: {
+          email,
+          tier,
+          answers: answerTexts,
+          entity: { entity: result.entity, subline: result.subline },
+          tokenInterest,
+        },
+      });
+
+      if (error) {
+        console.error("Edge function error:", error);
+        setHint("Something went wrong — please try again.");
+        setSending(false);
+        return;
+      }
+
+      setEmailSent(true);
+      setHint(`We've received your request for the ${tierLabels[tier]}. Check your inbox — we'll follow up within 24 hours.`);
+    } catch (err) {
+      console.error("Submit error:", err);
+      setHint("Something went wrong — please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const result = resolveEntity(answers);
@@ -288,10 +323,10 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
               <button
                 className="btn btn-primary"
                 onClick={handleSubmitEmail}
-                disabled={emailSent}
+                disabled={emailSent || sending}
                 style={{ whiteSpace: "nowrap", padding: "11px 20px", fontSize: "0.875rem" }}
               >
-                {emailSent ? "✓ Sent!" : "Send →"}
+                {emailSent ? "✓ Sent!" : sending ? "Sending…" : "Send →"}
               </button>
             </div>
             <p style={{ fontSize: "0.72rem", color: emailSent ? "var(--muted)" : "var(--subtle)", marginTop: 8, textAlign: "center" }}>
