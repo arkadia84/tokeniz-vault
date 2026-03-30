@@ -82,7 +82,7 @@ body {
 
 /* ── HERO ────────────────────────────────────────────────────────── */
 .hero {
-  padding: 108px 0 96px;
+  padding: 64px 0 96px;
   text-align: center;
   position: relative; overflow: hidden;
 }
