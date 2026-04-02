@@ -87,7 +87,8 @@ const questions = [
     sub: "Where your customers are — not where you live. This is the most important question.",
     options: [
       "🇺🇸 Primarily the US market",
-      "🌏 Asia Pacific",
+      "🌏 Southeast Asia / ASEAN (Indonesia, Vietnam, Thailand…)",
+      "🇨🇳 China / Greater Bay Area",
       "🇪🇺 Europe",
       "🌍 Middle East & Africa",
       "🌐 Global / fully remote, customers everywhere",
