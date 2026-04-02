@@ -13,9 +13,12 @@ const tierLabels: Record<string, string> = {
 
 function resolveEntity(answers: Answers) {
   const q3 = answers.q3?.text || "";
+  const q4 = answers.q4?.text || "";
   const q5text = answers.q5?.text || "";
   const wantsVC = q5text.includes("Raising investment");
-  const isAPAC = q3.includes("Asia Pacific");
+  const isASEAN = q3.includes("Southeast Asia");
+  const isChina = q3.includes("China") || q3.includes("Greater Bay");
+  const isCrypto = q4.includes("Crypto") || q4.includes("Web3") || q4.includes("DeFi");
 
   if (wantsVC) {
     return {
@@ -25,10 +28,20 @@ function resolveEntity(answers: Answers) {
       tokenizable: true,
     };
   }
-  if (isAPAC) {
+  if (isChina || (isASEAN && isCrypto)) {
+    return {
+      entity: "Hong Kong Limited",
+      partners: ["Osome", "Airwallex", "Aspire", "Elephants Inc."],
+      subline: "Hong Kong gives you direct access to China's market, a clear crypto licensing framework, and zero need for a local resident director.",
+      bankingNote: "Your action plan includes vetted banking partners for HK entities — including multi-currency accounts and stablecoin custody options. Available after you share your contact.",
+      tokenizable: false,
+    };
+  }
+  if (isASEAN) {
     return {
       entity: "Singapore Pte Ltd",
-      subline: "For APAC operations, Singapore gives you credibility, regulatory access, and regional banking.",
+      partners: ["Osome", "Aspire", "Revolut Business SG", "Elephants Inc."],
+      subline: "For ASEAN expansion and VC-backed growth, Singapore is the regional benchmark — 100+ tax treaties, robust IP protection, and investor-grade credibility.",
       bankingNote: "Your action plan includes vetted banking partners for Singapore entities — including traditional accounts and stablecoin custody options. Available after you share your contact.",
       tokenizable: false,
     };
