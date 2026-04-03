@@ -217,7 +217,9 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
 
       const { data, error } = await supabase.functions.invoke("send-confirmation", {
         body: {
+          firstName,
           email,
+          contact,
           tier,
           answers: answerTexts,
           entity: { entity: result.entity, subline: result.subline },
