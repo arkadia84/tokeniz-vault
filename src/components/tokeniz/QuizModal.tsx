@@ -346,18 +346,33 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
             )}
 
-            <div className="email-row" style={{ marginTop: 16 }}>
+            <div className="email-row" style={{ marginTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <input
+                type="text"
+                className="email-input"
+                ref={firstNameRef}
+                placeholder="Your first name"
+                style={{ gridColumn: "1" }}
+              />
               <input
                 type="email"
                 className="email-input"
                 ref={emailRef}
-                placeholder="Your email — we'll send your action plan + next steps"
+                placeholder="Your email address"
+                style={{ gridColumn: "2" }}
+              />
+              <input
+                type="text"
+                className="email-input"
+                ref={contactRef}
+                placeholder="WhatsApp or Telegram (optional)"
+                style={{ gridColumn: "1 / -1" }}
               />
               <button
                 className="btn btn-primary"
                 onClick={handleSubmitEmail}
                 disabled={emailSent || sending}
-                style={{ whiteSpace: "nowrap", padding: "11px 20px", fontSize: "0.875rem" }}
+                style={{ whiteSpace: "nowrap", padding: "11px 20px", fontSize: "0.875rem", gridColumn: "1 / -1" }}
               >
                 {emailSent ? "✓ Sent!" : sending ? "Sending…" : "Send →"}
               </button>
