@@ -135,7 +135,9 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
   const [sending, setSending] = useState(false);
   const [tokenInterest, setTokenInterest] = useState(false);
   const [hint, setHint] = useState("Select a tier above, then enter your email — we'll be in touch within 24 hours.");
+  const firstNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const contactRef = useRef<HTMLInputElement>(null);
 
   const reset = useCallback(() => {
     setCurrentQ(0);
