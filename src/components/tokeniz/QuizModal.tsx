@@ -11,6 +11,70 @@ const tierLabels: Record<string, string> = {
   fasttrack: "Fast Track advisory ($997)",
 };
 
+interface PartnerPayload {
+  formation_partner_name: string;
+  formation_partner_desc: string;
+  formation_partner_url: string;
+  formation_cta_text: string;
+  bank_1_name: string;
+  bank_1_desc: string;
+  bank_2_name: string;
+  bank_2_desc: string;
+  stablecoin_partner_name: string;
+  stablecoin_partner_desc: string;
+}
+
+const partnerMap: Record<string, PartnerPayload> = {
+  "Wyoming LLC": {
+    formation_partner_name: "Fileform",
+    formation_partner_desc: "US-based filing service. Handles state filings, registered agent, and operating agreement.",
+    formation_partner_url: "https://register.fileforms.com/partner-file-now-cta-v2/?REFERRALCODE=recM4mmc9COERzwg5",
+    formation_cta_text: "Register via Fileform →",
+    bank_1_name: "Mercury",
+    bank_1_desc: "US digital bank for startups. No minimum balance. Remote-friendly onboarding for foreign-owned LLCs.",
+    bank_2_name: "Revolut Business",
+    bank_2_desc: "Multi-currency account with USD, EUR, GBP. Good fallback if Mercury requires US presence.",
+    stablecoin_partner_name: "",
+    stablecoin_partner_desc: "",
+  },
+  "Delaware C-Corp": {
+    formation_partner_name: "Fileform",
+    formation_partner_desc: "Handles Delaware C-Corp formation including registered agent and founder documents.",
+    formation_partner_url: "https://register.fileforms.com/partner-file-now-cta-v2/?REFERRALCODE=recM4mmc9COERzwg5",
+    formation_cta_text: "Register via Fileform →",
+    bank_1_name: "Mercury",
+    bank_1_desc: "Preferred for VC-backed startups. SAFE-note friendly. Remote onboarding available.",
+    bank_2_name: "Brex",
+    bank_2_desc: "Corporate card + banking for startups. Good for pre-revenue companies with investor backing.",
+    stablecoin_partner_name: "",
+    stablecoin_partner_desc: "",
+  },
+  "Singapore Pte Ltd": {
+    formation_partner_name: "Osome",
+    formation_partner_desc: "Singapore company formation for non-residents. Includes registered address, nominee director if needed, and compliance setup.",
+    formation_partner_url: "https://osome.com/hk/r/8V3C7H7V",
+    formation_cta_text: "Register via Osome →",
+    bank_1_name: "Aspire",
+    bank_1_desc: "Singapore-native neobank for SMEs. Multi-currency, fast onboarding for Singapore entities.",
+    bank_2_name: "Revolut Business SG",
+    bank_2_desc: "Revolut's Singapore product. Good multi-currency alternative for SG-registered companies.",
+    stablecoin_partner_name: "Elephants Inc.",
+    stablecoin_partner_desc: "Stablecoin custodial account for APAC entities. USDC-based, compliant, fast setup via the referral link.",
+  },
+  "Hong Kong Limited": {
+    formation_partner_name: "Osome",
+    formation_partner_desc: "HK company formation for non-residents. Includes registered address, company secretary, and annual compliance.",
+    formation_partner_url: "https://osome.com/hk/r/8V3C7H7V",
+    formation_cta_text: "Register via Osome →",
+    bank_1_name: "Airwallex",
+    bank_1_desc: "HK-founded neobank. Multi-currency accounts, strong for China-adjacent businesses and cross-border payments.",
+    bank_2_name: "Aspire",
+    bank_2_desc: "Multi-currency neobank covering HK entities. Good APAC alternative with fast onboarding.",
+    stablecoin_partner_name: "Elephants Inc.",
+    stablecoin_partner_desc: "Stablecoin custodial account for APAC entities. USDC-based, compliant, fast setup via the referral link.",
+  },
+};
+
 function resolveEntity(answers: Answers) {
   const q3 = answers.q3?.text || "";
   const q4 = answers.q4?.text || "";
@@ -207,6 +271,7 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
 
     const tier = selectedTier || "free";
     const result = resolveEntity(answers);
+    const partners = partnerMap[result.entity] || partnerMap["Wyoming LLC"];
 
     setSending(true);
     try {
@@ -215,14 +280,16 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
         answerTexts[key] = answers[key]?.text || "";
       }
 
-      const { data, error } = await supabase.functions.invoke("send-confirmation", {
+      const { data, error } = await supabase.functions.invoke("send-action-plan-email", {
         body: {
-          firstName,
+          first_name: firstName,
           email,
           contact,
           tier,
           answers: answerTexts,
-          entity: { entity: result.entity, subline: result.subline },
+          entity_name: result.entity,
+          entity_reason: result.subline,
+          ...partners,
           tokenInterest,
         },
       });
@@ -230,17 +297,17 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
       if (error) {
         console.error("Edge function error:", error);
         if (!data?.success) {
-          setHint("Something went wrong — please try again.");
+          setHint("Something went wrong — please try again or email hello@tokeniz.ai");
           setSending(false);
           return;
         }
       }
 
       setEmailSent(true);
-      setHint(`We've received your request for the ${tierLabels[tier]}. Check your inbox — we'll follow up within 24 hours.`);
+      setHint("✓ Check your inbox — your action plan is on its way.");
     } catch (err) {
       console.error("Submit error:", err);
-      setHint("Something went wrong — please try again.");
+      setHint("Something went wrong — please try again or email hello@tokeniz.ai");
     } finally {
       setSending(false);
     }
