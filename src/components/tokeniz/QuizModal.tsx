@@ -135,7 +135,9 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
   const [sending, setSending] = useState(false);
   const [tokenInterest, setTokenInterest] = useState(false);
   const [hint, setHint] = useState("Select a tier above, then enter your email — we'll be in touch within 24 hours.");
+  const firstNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const contactRef = useRef<HTMLInputElement>(null);
 
   const reset = useCallback(() => {
     setCurrentQ(0);
@@ -184,11 +186,24 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
   };
 
   const handleSubmitEmail = async () => {
+    const firstName = firstNameRef.current?.value.trim() || "";
     const email = emailRef.current?.value.trim() || "";
+    const contact = contactRef.current?.value.trim() || "";
+
+    let valid = true;
+    if (!firstName) {
+      if (firstNameRef.current) firstNameRef.current.style.borderColor = "red";
+      valid = false;
+    } else {
+      if (firstNameRef.current) firstNameRef.current.style.borderColor = "";
+    }
     if (!email || !email.includes("@")) {
       if (emailRef.current) emailRef.current.style.borderColor = "red";
-      return;
+      valid = false;
+    } else {
+      if (emailRef.current) emailRef.current.style.borderColor = "";
     }
+    if (!valid) return;
 
     const tier = selectedTier || "free";
     const result = resolveEntity(answers);
@@ -202,7 +217,9 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
 
       const { data, error } = await supabase.functions.invoke("send-confirmation", {
         body: {
+          firstName,
           email,
+          contact,
           tier,
           answers: answerTexts,
           entity: { entity: result.entity, subline: result.subline },
@@ -329,18 +346,33 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
             )}
 
-            <div className="email-row" style={{ marginTop: 16 }}>
+            <div className="email-row" style={{ marginTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <input
+                type="text"
+                className="email-input"
+                ref={firstNameRef}
+                placeholder="Your first name"
+                style={{ gridColumn: "1" }}
+              />
               <input
                 type="email"
                 className="email-input"
                 ref={emailRef}
-                placeholder="Your email — we'll send your action plan + next steps"
+                placeholder="Your email address"
+                style={{ gridColumn: "2" }}
+              />
+              <input
+                type="text"
+                className="email-input"
+                ref={contactRef}
+                placeholder="WhatsApp or Telegram (optional)"
+                style={{ gridColumn: "1 / -1" }}
               />
               <button
                 className="btn btn-primary"
                 onClick={handleSubmitEmail}
                 disabled={emailSent || sending}
-                style={{ whiteSpace: "nowrap", padding: "11px 20px", fontSize: "0.875rem" }}
+                style={{ whiteSpace: "nowrap", padding: "11px 20px", fontSize: "0.875rem", gridColumn: "1 / -1" }}
               >
                 {emailSent ? "✓ Sent!" : sending ? "Sending…" : "Send →"}
               </button>

@@ -553,7 +553,7 @@ body {
 @media (max-width: 600px) {
   .entity-grid { grid-template-columns: 1fr; }
   .trust-inner { gap: 18px; }
-  .email-row { flex-direction: column; }
+  .email-row { grid-template-columns: 1fr !important; }
 
   /* Modal: scrollable on mobile */
   .modal-overlay { padding: 8px; }
