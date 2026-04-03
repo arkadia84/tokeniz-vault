@@ -271,6 +271,7 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
 
     const tier = selectedTier || "free";
     const result = resolveEntity(answers);
+    const partners = partnerMap[result.entity] || partnerMap["Wyoming LLC"];
 
     setSending(true);
     try {
@@ -279,14 +280,16 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
         answerTexts[key] = answers[key]?.text || "";
       }
 
-      const { data, error } = await supabase.functions.invoke("send-confirmation", {
+      const { data, error } = await supabase.functions.invoke("send-action-plan-email", {
         body: {
-          firstName,
+          first_name: firstName,
           email,
           contact,
           tier,
           answers: answerTexts,
-          entity: { entity: result.entity, subline: result.subline },
+          entity_name: result.entity,
+          entity_reason: result.subline,
+          ...partners,
           tokenInterest,
         },
       });
@@ -294,17 +297,17 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
       if (error) {
         console.error("Edge function error:", error);
         if (!data?.success) {
-          setHint("Something went wrong — please try again.");
+          setHint("Something went wrong — please try again or email hello@tokeniz.ai");
           setSending(false);
           return;
         }
       }
 
       setEmailSent(true);
-      setHint(`We've received your request for the ${tierLabels[tier]}. Check your inbox — we'll follow up within 24 hours.`);
+      setHint("✓ Check your inbox — your action plan is on its way.");
     } catch (err) {
       console.error("Submit error:", err);
-      setHint("Something went wrong — please try again.");
+      setHint("Something went wrong — please try again or email hello@tokeniz.ai");
     } finally {
       setSending(false);
     }
