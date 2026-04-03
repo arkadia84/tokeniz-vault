@@ -186,11 +186,24 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
   };
 
   const handleSubmitEmail = async () => {
+    const firstName = firstNameRef.current?.value.trim() || "";
     const email = emailRef.current?.value.trim() || "";
+    const contact = contactRef.current?.value.trim() || "";
+
+    let valid = true;
+    if (!firstName) {
+      if (firstNameRef.current) firstNameRef.current.style.borderColor = "red";
+      valid = false;
+    } else {
+      if (firstNameRef.current) firstNameRef.current.style.borderColor = "";
+    }
     if (!email || !email.includes("@")) {
       if (emailRef.current) emailRef.current.style.borderColor = "red";
-      return;
+      valid = false;
+    } else {
+      if (emailRef.current) emailRef.current.style.borderColor = "";
     }
+    if (!valid) return;
 
     const tier = selectedTier || "free";
     const result = resolveEntity(answers);
