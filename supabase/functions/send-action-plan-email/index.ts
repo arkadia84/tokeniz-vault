@@ -410,6 +410,32 @@ Deno.serve(async (req) => {
       console.error("Resend error:", resendData);
     }
 
+    // Send internal notification email
+    try {
+      const notifBody = `New quiz submission on tokeniz.ai\n\nName: ${first_name}\nEmail: ${email}\nContact (WA/TG): ${contact || "—"}\nEntity match: ${entity_name || "—"}\nTier selected: ${selectedTier}\n\nQuiz answers:\nQ1 (Situation): ${quizAnswers.q1}\nQ2 (Based in): ${quizAnswers.q2}\nQ3 (Market): ${quizAnswers.q3}\nQ4 (Building): ${quizAnswers.q4}\nQ5 (Priority): ${quizAnswers.q5}`;
+
+      const notifRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Tokeniz Leads <hey@tokeniz.ai>",
+          to: ["hey@tokeniz.ai"],
+          subject: `🔔 New lead — ${first_name} · ${entity_name || "Unknown"} · ${selectedTier}`,
+          text: notifBody,
+        }),
+      });
+
+      if (!notifRes.ok) {
+        const notifErr = await notifRes.json();
+        console.error("Notification email error:", notifErr);
+      }
+    } catch (notifError) {
+      console.error("Failed to send notification email:", notifError);
+    }
+
     console.log("Action plan lead:", { email, tier: selectedTier, entity: entity_name });
 
     return new Response(
