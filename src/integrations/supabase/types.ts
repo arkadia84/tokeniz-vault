@@ -32,6 +32,39 @@ export type Database = {
         }
         Relationships: []
       }
+      leads: {
+        Row: {
+          answers: Json | null
+          contact: string | null
+          created_at: string
+          email: string
+          entity: string | null
+          first_name: string
+          id: string
+          tier: string | null
+        }
+        Insert: {
+          answers?: Json | null
+          contact?: string | null
+          created_at?: string
+          email: string
+          entity?: string | null
+          first_name: string
+          id?: string
+          tier?: string | null
+        }
+        Update: {
+          answers?: Json | null
+          contact?: string | null
+          created_at?: string
+          email?: string
+          entity?: string | null
+          first_name?: string
+          id?: string
+          tier?: string | null
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           created_at: string
