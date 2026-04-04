@@ -59,25 +59,24 @@ export function ResultOptionsSection({ onOpenQuiz }: { onOpenQuiz: () => void })
             <button className="opt-btn opt-btn-primary" onClick={onOpenQuiz}>Start with the Quiz →</button>
           </div>
 
-          {/* Option 3 — Fast Track */}
+          {/* Option 3 — Founder's Pack */}
           <div className="option-card">
-            <div className="option-tier">Option 03 — Fast Track</div>
-            <div className="option-price"><span className="cur">$</span><span className="amt">997</span></div>
+            <div className="option-tier">Option 03 — Founder's Pack</div>
+            <div className="option-price"><span className="cur">$</span><span className="amt">697</span></div>
             <div style={{ fontSize: '0.72rem', color: 'var(--subtle)', marginBottom: 10, fontStyle: 'italic' }}>Advisory fee only · formation costs paid separately to partners</div>
-            <div className="option-timeline">⚡ 10 business days — for when time is money</div>
+            <div className="option-timeline">🛡 Human expert included</div>
             <div className="option-desc">
-              Same hands-on guidance as Guided, with a dedicated priority slot.
-              We respond faster, push harder, and keep everything moving so you're
-              operational in 10 business days.
+              Everything in Guided, plus a 30-minute intro call with a vetted legal expert — ask your specific questions on structure, banking eligibility, and compliance before you make a single move.
             </div>
             <ul className="option-features">
               <li><span className="ck">✓</span> <span><strong>Everything in Guided</strong></span></li>
-              <li><span className="ck">✓</span> <span>Priority response — we move at your pace</span></li>
-              <li><span className="ck">✓</span> <span>Dedicated support slot — no queue</span></li>
-              <li><span className="ck">✓</span> <span>Target: operational in 10 business days</span></li>
+              <li><span className="ck">✓</span> <span>30-min expert intro call — specialist revealed after payment</span></li>
+              <li><span className="ck">✓</span> <span>Ask anything — structure, banking, compliance, your situation</span></li>
+              <li><span className="ck">✓</span> <span>Specialist matched to your jurisdiction &amp; industry</span></li>
+              <li><span className="ck">✓</span> <span>Priority async support after the call</span></li>
             </ul>
             <div className="option-disclaimer">
-              Advisory service fee — account opening is not guaranteed, as final decisions rest with the financial institution. We maximise your chances by making sure every application is right the first time.
+              Advisory service fee — account opening is not guaranteed, as final decisions rest with the financial institution. Expert call provided by a vetted independent specialist.
             </div>
             <button className="opt-btn opt-btn-outline" onClick={onOpenQuiz}>Start with the Quiz →</button>
           </div>

@@ -376,8 +376,8 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
             <div className="result-paths">
               {[
                 { key: "free", title: "Get my action plan by email", desc: "Referral links, doc checklist & step-by-step guide — apply yourself, free", price: "Free" },
-                { key: "guided", title: "Guided — we walk you through every step", desc: "Instructions sent immediately · live support on WhatsApp or Telegram · advisory fee only", price: "$497" },
-                { key: "fasttrack", title: "Fast Track — priority slot, 10 business days", desc: "Same guidance, dedicated support, faster pace · advisory fee only", price: "$997" },
+                { key: "guided", title: "Guided — AI walks you through every step", desc: "AI-powered guidance · document checklists · async Q&A · advisory fee only", price: "$497" },
+                { key: "founders", title: "Founder's Pack — human expert included", desc: "Everything in Guided + 30-min expert intro call · specialist matched to your situation", price: "$697" },
               ].map((tier) => (
                 <div
                   key={tier.key}
