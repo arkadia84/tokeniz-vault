@@ -79,7 +79,8 @@ function buildEmailHtml(data: {
         <tr><td style="padding:18px 20px;">
           <p style="margin:0 0 3px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0aec0;">Stablecoin Account</p>
           <p style="margin:0 0 5px;font-size:15px;font-weight:700;color:#2d3748;">${stablecoin_partner_name}</p>
-          <p style="margin:0;font-size:13px;color:#718096;line-height:1.5;">${stablecoin_partner_desc}</p>
+          <p style="margin:0 0 10px;font-size:13px;color:#718096;line-height:1.5;">${stablecoin_partner_desc}</p>
+          <p style="margin:0;"><a href="https://app.elephants.inc/onboard/signup?referral=PROPEX" style="background:#5b8ff9;color:#ffffff;font-size:12px;font-weight:700;padding:9px 18px;border-radius:6px;text-decoration:none;display:inline-block;letter-spacing:0.04em;">Open Elephants Account →</a></p>
         </td></tr>
       </table>`
     : "";
