@@ -8,7 +8,7 @@ interface Answers {
 const tierLabels: Record<string, string> = {
   free: "Free action plan",
   guided: "Guided advisory ($497)",
-  fasttrack: "Fast Track advisory ($997)",
+  founders: "Founder's Pack ($697)",
 };
 
 interface PartnerPayload {
