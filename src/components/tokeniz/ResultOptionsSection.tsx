@@ -41,19 +41,17 @@ export function ResultOptionsSection({ onOpenQuiz }: { onOpenQuiz: () => void })
             <div className="option-tier">Option 02 — Guided</div>
             <div className="option-price"><span className="cur">$</span><span className="amt">497</span></div>
             <div style={{ fontSize: '0.72rem', color: 'var(--subtle)', marginBottom: 10, fontStyle: 'italic' }}>Advisory fee only · formation costs paid separately to partners</div>
-            <div className="option-timeline">⏱ Step-by-step, at your pace — live on WhatsApp or Telegram</div>
+            <div className="option-timeline">🤖 AI-guided, at your pace — instructions, checklists &amp; async support</div>
             <div className="option-desc">
-              We walk you through every step. We tell you which bank to approach first, exactly
-              what to say, how to respond to follow-up requests, and answer your questions live.
-              You do the actions — we make sure you don't waste a single application.
+              Our AI agent walks you through every step after payment — which entity to form, which bank to approach first, what documents to prepare, and exactly what to say. You do the actions, the agent makes sure you don't waste a single application.
             </div>
             <ul className="option-features">
               <li><span className="ck">✓</span> <span><strong>Everything in Self-Serve</strong></span></li>
-              <li><span className="ck">✓</span> <span>Step-by-step instructions sent after payment</span></li>
-              <li><span className="ck">✓</span> <span>Live guidance via shared WhatsApp or Telegram</span></li>
-              <li><span className="ck">✓</span> <span>We tell you exactly what to say at each step</span></li>
+              <li><span className="ck">✓</span> <span>AI-powered step-by-step guidance — sent after payment</span></li>
+              <li><span className="ck">✓</span> <span>Entity-specific document checklist</span></li>
+              <li><span className="ck">✓</span> <span>Bank application walkthrough — field by field</span></li>
+              <li><span className="ck">✓</span> <span>Async Q&amp;A — ask anything, get answers fast</span></li>
               <li><span className="ck">✓</span> <span>Document review before every submission</span></li>
-              <li><span className="ck">✓</span> <span>Accompaniment through your shortlisted banking partners</span></li>
             </ul>
             <div className="option-disclaimer">
               Advisory service fee — account opening is not guaranteed, as final decisions rest with the financial institution. We maximise your chances by making sure every application is right the first time.
