@@ -1,53 +1,20 @@
 
 
-## Plan: Create `leads` table and `send-action-plan-email` Edge Function
+## Plan: Fix CORS origin check in `send-action-plan-email` Edge Function
 
-### 1. Database migration — create `leads` table
+### Problem
+The edge function works correctly — emails are sent and leads are saved (confirmed via logs). However, the browser blocks the response due to a CORS mismatch: the preview runs on `*.lovableproject.com` but the function only allows `*.lovable.app` origins. This causes the frontend to show an error instead of the success state.
 
-```sql
-CREATE TABLE public.leads (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  first_name   text NOT NULL,
-  email        text NOT NULL,
-  contact      text,
-  entity       text,
-  tier         text,
-  answers      jsonb,
-  created_at   timestamptz NOT NULL DEFAULT now()
-);
+### Fix — `supabase/functions/send-action-plan-email/index.ts`
 
-ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
+**Line 11**: Update the `isAllowed` check to also accept `.lovableproject.com`:
+
+```typescript
+const isAllowed = ALLOWED_ORIGINS.includes(origin) || origin.endsWith(".lovable.app") || origin.endsWith(".lovableproject.com");
 ```
 
-No RLS select/insert policies needed since only the Edge Function (using service role) writes to this table.
+That is the only change. No design or frontend changes needed.
 
-### 2. Create `supabase/functions/send-action-plan-email/index.ts`
-
-The function will:
-
-- Reuse the same CORS helper and rate-limiting pattern from the existing `send-confirmation` function
-- Accept the POST body exactly as specified (all partner/bank fields passed explicitly by the client — no server-side partner resolution)
-- Build the email HTML as a template string with `${placeholder}` interpolation
-- **Stablecoin block**: conditionally include only when `stablecoin_partner_name` is non-empty
-- **Tier block**: call a `buildTierBlock(tier)` helper (reused logic from existing function) that returns the correct HTML for "free", "guided", or "fasttrack"
-- Send via Resend directly (`fetch("https://api.resend.com/emails", ...)`) using `RESEND_API_KEY`
-  - From: `Yacine at Tokeniz <hello@tokeniz.ai>`
-  - Subject: `Your Tokeniz Match — ${entity_name}`
-  - CC: `admin@propex.app` (matching existing behavior)
-- Save lead to `leads` table via Supabase service role client
-- Return `{ success: true }` or `{ error: "..." }`
-
-The email HTML template will be essentially the same structure as the existing `buildEmailHtml` in `send-confirmation`, but with all partner fields coming from the request body instead of being resolved server-side.
-
-### 3. Deploy
-
-Deploy the new edge function via `deploy_edge_functions`.
-
-### No frontend changes
-
-The frontend `QuizModal.tsx` is not modified. The caller will invoke this new function separately when ready.
-
-### Files to create/update
-- **Migration**: `leads` table
-- **New file**: `supabase/functions/send-action-plan-email/index.ts`
+### Verification
+After deploying, re-test the quiz submission to confirm the button transitions to "Sending…" → "✓ Sent!" and the success hint appears.
 
