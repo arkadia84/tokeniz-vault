@@ -399,7 +399,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "Yacine at Tokeniz <hello@tokeniz.ai>",
         to: [email],
-        cc: ["admin@propex.app"],
+        cc: ["hey@tokeniz.ai"],
         subject,
         html: emailHtml,
       }),
