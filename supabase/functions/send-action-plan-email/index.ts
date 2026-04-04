@@ -28,14 +28,14 @@ function buildTierBlock(tier: string): string {
       </td></tr>
     </table>`;
   }
-  if (tier === "fasttrack") {
+  if (tier === "founders") {
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;margin-bottom:36px;">
       <tr><td style="padding:24px 28px;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#f97316;">⚡ Fast Track — $997</p>
-        <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">We'll move quickly — here's what to do now.</p>
-        <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">You've chosen our priority slot. Same hands-on guidance as Guided, with a dedicated response time and a target of 10 business days to get you operational. Once you confirm, we send the payment link and open the shared chat the same day.</p>
+        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#f97316;">🛡 Founder's Pack — $697</p>
+        <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">You've unlocked expert access — here's what happens next.</p>
+        <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">Everything in Guided, plus a 30-minute intro call with a vetted legal expert — ask your specific questions on structure, banking eligibility, and compliance before you make a single move. Once you confirm, we send the payment link and match you with a specialist within 48 hours.</p>
         <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#2d3748;">Reply now with:</p>
-        <p style="margin:0;font-size:13px;color:#2d3748;line-height:1.9;">📱 <strong>WhatsApp:</strong> +[your number with country code]<br/>✈️ <strong>Telegram:</strong> @[your username] (if you prefer TG)<br/>🌍 <strong>Your timezone</strong> — so we can start immediately</p>
+        <p style="margin:0;font-size:13px;color:#2d3748;line-height:1.9;">📱 <strong>WhatsApp:</strong> +[your number with country code]<br/>✈️ <strong>Telegram:</strong> @[your username] (if you prefer TG)<br/>🌍 <strong>Your timezone</strong> — so we can match you with the right specialist</p>
       </td></tr>
     </table>`;
   }
