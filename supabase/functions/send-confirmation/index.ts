@@ -56,30 +56,18 @@ function getPartners(entityName: string): PartnerInfo {
 
 const tierSubjects: Record<string, string> = {
   free: "Your Tokeniz Match — Free Action Plan",
-  guided: "Your Tokeniz Match — Guided Advisory ($497)",
-  fasttrack: "Your Tokeniz Match — Fast Track Advisory ($997)",
+  guided: "Your Tokeniz Match — Guided Advisory ($9 Founding Member)",
 };
 
 function buildTierBlock(tier: string): string {
   if (tier === "guided") {
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f5ff;border:1px solid #c3d4fd;border-radius:12px;margin-bottom:36px;">
       <tr><td style="padding:24px 28px;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5b8ff9;">Guided — $497</p>
+        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5b8ff9;">Guided — $9 (Founding Member)</p>
         <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">Great choice — let's get you started.</p>
         <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">Here's how it works: once you confirm, we'll send you the payment link and set up a shared WhatsApp or Telegram chat within 24 hours. From there, we walk you through every step — which bank to approach first, exactly what to say, how to respond to follow-up requests, and when to move to the next option.</p>
         <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#2d3748;">To get started, reply to this email with:</p>
         <p style="margin:0;font-size:13px;color:#2d3748;line-height:1.9;">📱 <strong>WhatsApp:</strong> +[your number with country code]<br/>✈️ <strong>Telegram:</strong> @[your username] (if you prefer TG)<br/>🌍 <strong>Your timezone</strong> — so we reach you at the right time</p>
-      </td></tr>
-    </table>`;
-  }
-  if (tier === "fasttrack") {
-    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;margin-bottom:36px;">
-      <tr><td style="padding:24px 28px;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#f97316;">⚡ Fast Track — $997</p>
-        <p style="margin:0 0 12px;font-size:15px;font-weight:700;color:#1a202c;">We'll move quickly — here's what to do now.</p>
-        <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">You've chosen our priority slot. Same hands-on guidance as Guided, with a dedicated response time and a target of 10 business days to get you operational. Once you confirm, we send the payment link and open the shared chat the same day.</p>
-        <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#2d3748;">Reply now with:</p>
-        <p style="margin:0;font-size:13px;color:#2d3748;line-height:1.9;">📱 <strong>WhatsApp:</strong> +[your number with country code]<br/>✈️ <strong>Telegram:</strong> @[your username] (if you prefer TG)<br/>🌍 <strong>Your timezone</strong> — so we can start immediately</p>
       </td></tr>
     </table>`;
   }

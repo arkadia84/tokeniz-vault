@@ -39,7 +39,11 @@ export function ResultOptionsSection({ onOpenQuiz }: { onOpenQuiz: () => void })
           <div className="option-card featured">
             <div className="option-badge">Most Popular</div>
             <div className="option-tier">Option 02 — Guided</div>
-            <div className="option-price"><span className="cur">$</span><span className="amt">497</span></div>
+            <div className="option-price">
+              <span style={{ textDecoration: 'line-through', color: 'var(--subtle)', fontSize: '0.9rem', marginRight: 6 }}>$97</span>
+              <span className="cur">$</span><span className="amt">9</span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#86EFAC', marginBottom: 6, fontWeight: 600 }}>🎉 Founding Member Price — limited spots</div>
             <div style={{ fontSize: '0.72rem', color: 'var(--subtle)', marginBottom: 10, fontStyle: 'italic' }}>Advisory fee only · formation costs paid separately to partners</div>
             <div className="option-timeline">🤖 AI-guided, at your pace — instructions, checklists &amp; async support</div>
             <div className="option-desc">
@@ -59,26 +63,30 @@ export function ResultOptionsSection({ onOpenQuiz }: { onOpenQuiz: () => void })
             <button className="opt-btn opt-btn-primary" onClick={onOpenQuiz}>Start with the Quiz →</button>
           </div>
 
-          {/* Option 3 — Founder's Pack */}
+          {/* Option 3 — Formation */}
           <div className="option-card">
-            <div className="option-tier">Option 03 — Founder's Pack</div>
-            <div className="option-price"><span className="cur">$</span><span className="amt">697</span></div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--subtle)', marginBottom: 10, fontStyle: 'italic' }}>Advisory fee only · formation costs paid separately to partners</div>
-            <div className="option-timeline">🛡 Human expert included</div>
+            <div className="option-tier">Option 03 — Formation</div>
+            <div className="option-price">
+              <span style={{ fontSize: '0.7rem', color: 'var(--subtle)', marginRight: 4 }}>From</span>
+              <span className="cur">$</span><span className="amt">399</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--subtle)', marginLeft: 4 }}>+ state fee</span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#86EFAC', marginBottom: 6, fontWeight: 600 }}>No Tokeniz fee — paid directly to our formation partner</div>
+            <div className="option-timeline">🏢 Full entity formation via our vetted partner</div>
             <div className="option-desc">
-              Everything in Guided, plus a 30-minute intro call with a vetted legal expert — ask your specific questions on structure, banking eligibility, and compliance before you make a single move.
+              Take the quiz, get your entity match, then form it directly through our vetted formation partner. Fees go directly to the partner, not us.
             </div>
             <ul className="option-features">
-              <li><span className="ck">✓</span> <span><strong>Everything in Guided</strong></span></li>
-              <li><span className="ck">✓</span> <span>30-min expert intro call — specialist revealed after payment</span></li>
-              <li><span className="ck">✓</span> <span>Ask anything — structure, banking, compliance, your situation</span></li>
-              <li><span className="ck">✓</span> <span>Specialist matched to your jurisdiction &amp; industry</span></li>
-              <li><span className="ck">✓</span> <span>Priority async support after the call</span></li>
+              <li><span className="ck">✓</span> <span>LLC or Corp formation filed for you</span></li>
+              <li><span className="ck">✓</span> <span>EIN (Employer ID Number) included</span></li>
+              <li><span className="ck">✓</span> <span>Registered agent — year 1 included</span></li>
+              <li><span className="ck">✓</span> <span>Operating agreement template provided</span></li>
+              <li><span className="ck">✓</span> <span>100% compliance guaranteed · filed in 10 business days or less</span></li>
             </ul>
             <div className="option-disclaimer">
-              Advisory service fee — account opening is not guaranteed, as final decisions rest with the financial institution. Expert call provided by a vetted independent specialist.
+              Fees paid directly to our formation partner. State filing fees apply separately. Partner and pricing vary by entity type — take the quiz to see your match.
             </div>
-            <button className="opt-btn opt-btn-outline" onClick={onOpenQuiz}>Start with the Quiz →</button>
+            <button className="opt-btn opt-btn-outline" onClick={onOpenQuiz}>Take the Quiz to Get Started →</button>
           </div>
         </div>
       </div>

@@ -7,8 +7,34 @@ interface Answers {
 
 const tierLabels: Record<string, string> = {
   free: "Free action plan",
-  guided: "Guided advisory ($497)",
-  founders: "Founder's Pack ($697)",
+  guided: "Guided — Founding Member ($9)",
+};
+
+const formationLinks: Record<string, { heading: string; desc: string; price: string; url: string }> = {
+  "Wyoming LLC": {
+    heading: "Form your Wyoming LLC via Fileforms →",
+    desc: "LLC + EIN + registered agent · fees paid directly to Fileforms · no Tokeniz fee",
+    price: "From $399 + state fee",
+    url: "https://register.fileforms.com/partner-file-now-cta-v2/?REFERRALCODE=recM4mmc9COERzwg5",
+  },
+  "Delaware C-Corp": {
+    heading: "Form your Delaware C-Corp via Fileforms →",
+    desc: "Corp + EIN + registered agent · fees paid directly to Fileforms · no Tokeniz fee",
+    price: "From $399 + state fee",
+    url: "https://register.fileforms.com/partner-file-now-cta-v2/?REFERRALCODE=recM4mmc9COERzwg5",
+  },
+  "Singapore Pte Ltd": {
+    heading: "Form your Singapore Pte Ltd via Sleek →",
+    desc: "SG company formation · registered address · company secretary · no Tokeniz fee",
+    price: "From SGD 600",
+    url: "https://sleek.com/sg/?ref=zmqynme",
+  },
+  "Hong Kong Limited": {
+    heading: "Form your Hong Kong Limited via Osome →",
+    desc: "HK company formation · registered address · company secretary · no Tokeniz fee",
+    price: "From HKD 4,500",
+    url: "https://osome.com/hk/r/8V3C7H7V",
+  },
 };
 
 interface PartnerPayload {
@@ -50,10 +76,10 @@ const partnerMap: Record<string, PartnerPayload> = {
     stablecoin_partner_desc: "",
   },
   "Singapore Pte Ltd": {
-    formation_partner_name: "Osome",
-    formation_partner_desc: "Singapore company formation for non-residents. Includes registered address, nominee director if needed, and compliance setup.",
-    formation_partner_url: "https://osome.com/hk/r/8V3C7H7V",
-    formation_cta_text: "Register via Osome →",
+    formation_partner_name: "Sleek",
+    formation_partner_desc: "Singapore company formation for non-residents. Includes registered address, company secretary, and compliance setup.",
+    formation_partner_url: "https://sleek.com/sg/?ref=zmqynme",
+    formation_cta_text: "Register via Sleek →",
     bank_1_name: "Aspire",
     bank_1_desc: "Singapore-native neobank for SMEs. Multi-currency, fast onboarding for Singapore entities.",
     bank_2_name: "Revolut Business SG",
@@ -104,7 +130,7 @@ function resolveEntity(answers: Answers) {
   if (isASEAN) {
     return {
       entity: "Singapore Pte Ltd",
-      partners: ["Osome", "Aspire", "Revolut Business SG", "Elephants Inc."],
+      partners: ["Sleek", "Aspire", "Revolut Business SG", "Elephants Inc."],
       subline: "For ASEAN expansion and VC-backed growth, Singapore is the regional benchmark — 100+ tax treaties, robust IP protection, and investor-grade credibility.",
       bankingNote: "Your action plan includes vetted banking partners for Singapore entities — including traditional accounts and stablecoin custody options. Available after you share your contact.",
       tokenizable: false,
@@ -375,9 +401,8 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
 
             <div className="result-paths">
               {[
-                { key: "free", title: "Get my action plan by email", desc: "Referral links, doc checklist & step-by-step guide — apply yourself, free", price: "Free" },
-                { key: "guided", title: "Guided — AI walks you through every step", desc: "AI-powered guidance · document checklists · async Q&A · advisory fee only", price: "$497" },
-                { key: "founders", title: "Founder's Pack — human expert included", desc: "Everything in Guided + 30-min expert intro call · specialist matched to your situation", price: "$697" },
+                { key: "free", title: "Get my action plan by email", desc: "Referral links, doc checklist & step-by-step guide — apply yourself, free", price: "Free", priceStrike: "" },
+                { key: "guided", title: "Guided — AI walks you through every step", desc: "AI-powered guidance · document checklists · async Q&A · advisory fee only", price: "$9", priceStrike: "$97" },
               ].map((tier) => (
                 <div
                   key={tier.key}
@@ -388,11 +413,36 @@ export function QuizModal({ open, onClose }: { open: boolean; onClose: () => voi
                     <h4>{tier.title}</h4>
                     <p>{tier.desc}</p>
                   </div>
-                  <div className="rp-price">{tier.price}</div>
+                  <div className="rp-price">
+                    {tier.priceStrike && <span style={{ textDecoration: "line-through", color: "var(--subtle)", fontSize: "0.75rem", marginRight: 4 }}>{tier.priceStrike}</span>}
+                    {tier.price}
+                    {tier.key === "guided" && <div style={{ fontSize: "0.65rem", color: "#86EFAC", marginTop: 2 }}>🎉 Founding Member</div>}
+                  </div>
                   <div className="rp-arrow">→</div>
                 </div>
               ))}
             </div>
+
+            {/* Formation partner referral row */}
+            {(() => {
+              const fl = formationLinks[result.entity] || formationLinks["Wyoming LLC"];
+              return (
+                <div
+                  style={{ marginTop: 12, padding: "14px 16px", borderRadius: 12, border: "1px solid rgba(134,239,172,0.35)", borderTop: "2px solid rgba(134,239,172,0.5)", background: "rgba(134,239,172,0.05)", cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}
+                  onClick={() => window.open(fl.url, "_blank")}
+                >
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text)", margin: 0 }}>{fl.heading}</h4>
+                    <p style={{ fontSize: "0.75rem", color: "var(--muted)", margin: "3px 0 0" }}>{fl.desc}</p>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text)" }}>{fl.price}</div>
+                    <div style={{ fontSize: "0.65rem", color: "#86EFAC", marginTop: 2 }}>No Tokeniz fee</div>
+                  </div>
+                  <div style={{ fontSize: "1rem", color: "var(--muted)", flexShrink: 0 }}>↗</div>
+                </div>
+              );
+            })()}
 
             {result.tokenizable && (
               <div style={{ marginTop: 18, padding: "14px 16px", borderRadius: 12, border: "1px solid rgba(139,92,246,0.35)", background: "rgba(139,92,246,0.07)" }}>
